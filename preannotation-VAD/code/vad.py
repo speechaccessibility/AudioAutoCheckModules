@@ -103,7 +103,7 @@ def write_json(json_path, audio_id, start_time, end_time):
 def main(args):
     if len(args) != 2:
         sys.stderr.write(
-            'Usage: vad.exe <path to wav file> <path to json file>\n')
+            'Usage: vad.py <path to wav file> <path to json file>\n')
         sys.exit(1)
     audio, sample_rate = read_wave(args[0])
     vad = Vad(3)
