@@ -1,4 +1,4 @@
-# postannotation-snr
+# postannotation-snr/clip
 Input .wav and .json paths, generate signal-to-noise ratio (snr) and detect audio clipping.
 
 
