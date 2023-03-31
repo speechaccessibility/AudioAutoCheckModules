@@ -21,9 +21,8 @@ python snr-clip.py {path to wav file} {path to json file}
   1. If (scale * the first peak > supremum), it is considered to be the noise level. The scale is set to be 10 in Matlab s.t. the noise level is reasonably big. In this case, we set the scale to be 15 in order to improve compatibility. 
  
   2. If only one peak is detected, the resulting snr by Matlab seems not very reasonale. Inspired by the "quick" nist-stnr method, we come up with another snr approximation in place of the Matlab outcome, where the noise level is set to be 5%, while the speech level remains 95%. However, this kind of method is not endorsed by NIST and thus it is for reference only. Under this circumstance, 'approximation' is True. (According to experiments on the MS-SNSD-master dataset, this rarely happens as only 3 of the first 50 audios has only one peak within clean-test set.)
-+ [CLIP] The clipping detection part is based on the ClipDaT algorithm proposed by John et al., where we add a skip number, and the below-threshold-count is set to be the same as the skip number.
-<img src="https://ars.els-cdn.com/content/image/1-s2.0-S0167639321000832-gr9.jpg" width="240px" height="240px">
-
++ [CLIP] The clipping detection part is based on the ClipDaT algorithm proposed by John et al., where we ignore the clipping event if the clip_duration is rather small. Taking 200 Hz sine wave as an approximation of human voice, it is reasonable to skip the event if the clip_duration is smaller than the time range between the maximum and the 99.5% maximum of the sine wave. After we calculate the skip number, we set the below-threshold-count to be the same. In our case, 
+<div align=center> <img src="https://ars.els-cdn.com/content/image/1-s2.0-S0167639321000832-gr9.jpg" width="360px" height="360px"> <div align=left>
 
 ## Reference:
 1. [SNR] Original documents at http://labrosa.ee.columbia.edu/~dpwe/tmp/nist/doc/stnr.txt
