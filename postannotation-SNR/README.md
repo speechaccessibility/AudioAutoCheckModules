@@ -15,7 +15,7 @@ python snr-clip.py {path to wav file} {path to json file}
 ## Reference:
 1. [SNR] Original documents at http://labrosa.ee.columbia.edu/~dpwe/tmp/nist/doc/stnr.txt
 2. [SNR] Matlab implementation at https://labrosa.ee.columbia.edu/projects/snreval/snreval.zip
-3. [CLIP] Baseline paper: John H.L. Hansen, Allen Stauffer, Wei Xia, Nonlinear waveform distortion: Assessment and detection of clipping on speech data and systems, Speech Communication, Volume 134, 2021, Pages 20-31, ISSN 0167-6393, https://doi.org/10.1016/j.specom.2021.07.007.
+3. [CLIP] Baseline: John H.L. Hansen, Allen Stauffer, Wei Xia, Nonlinear waveform distortion: Assessment and detection of clipping on speech data and systems, Speech Communication, Volume 134, 2021, Pages 20-31, ISSN 0167-6393, https://doi.org/10.1016/j.specom.2021.07.007.
 
 ## Notes:
 + [SNR] This snr algorithm for noisy audio is constructed on the basis of nist-stnr method (preferred). Compared to the Matlab implementation, two modifications are made in order to better fit those audios with abnormal peak curves.
