@@ -334,7 +334,7 @@ def write_json(json_path, audio_id, snr, approximation, audio_is_clip, duration)
 def main(args):
     if len(args) != 2:
         sys.stderr.write(
-            'Usage: snr.py <path to wav file> <path to json file>\n')
+            'Usage: snr-clip.py <path to wav file> <path to json file>\n')
         sys.exit(1)
     audio, sr = read_wave(args[0], norm = False)
     snr, peak_is_single = nist_stnr(audio, sr)
