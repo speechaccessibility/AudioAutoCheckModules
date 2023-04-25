@@ -1,34 +1,27 @@
 # -*- coding: utf-8 -*-
 
 from collections import deque
-from contextlib import closing
 import sys
-import wave
+import librosa
+import soundfile as sf
 import numpy as np
 from json import dump
 from webrtcvad import Vad
 
 
 def read_wave(path):
-
-    with closing(wave.open(path, 'rb')) as wf:
-        sample_width = wf.getsampwidth()
-        assert sample_width == 2
-        sample_rate = wf.getframerate()
-        assert sample_rate in (8000, 16000, 32000, 48000)
-        pcm_data = wf.readframes(wf.getnframes())
-        num_channels = wf.getnchannels()
-        # insert solution for multi-channels
-        if num_channels == 2:
-            wave_data = np.frombuffer(pcm_data, dtype=np.short)
-            wave_data.shape = (-1, num_channels)
-            mono_wave = np.sum(wave_data, axis=1, keepdims=True)/num_channels
-            ints = mono_wave.astype(np.int16)
-            mono_data = ints.astype('<u2').tobytes()
-            return mono_data, sample_rate
-        else:
-            assert num_channels == 1
-            return pcm_data, sample_rate
+    
+    data, sr = sf.read(path)
+    if len(np.shape(data)) > 1:
+        data = np.mean(data, axis=1, keepdims=True)
+        data = np.reshape(data, (-1,))
+    if sr not in (8000, 16000, 32000, 48000):
+        data = librosa.resample(data, orig_sr=sr, target_sr=16000)
+        sr = 16000
+    data = data * 32767
+    ints = data.astype(np.int16)
+    audio = ints.astype('<u2').tobytes()
+    return audio, sr
 
 
 class Frame(object):
@@ -77,7 +70,6 @@ def vad_collector(sample_rate, frame_duration_ms,
                     voiced_frames.append(f)
                 ring_buffer.clear()
         else:
-            
             voiced_frames.append(frame)
             ring_buffer.append((frame, is_speech))
             num_unvoiced = len([f for f, speech in ring_buffer if not speech])
@@ -106,6 +98,7 @@ def main(args):
             'Usage: vad.py <path to wav file> <path to json file>\n')
         sys.exit(1)
     audio, sample_rate = read_wave(args[0])
+    # audio, sample_rate = librosa.load(args[0], sr=48000)
     vad = Vad(3)
     frames = frame_generator(10, audio, sample_rate)
     frames = list(frames)
@@ -121,7 +114,7 @@ def main(args):
     audio_id = args[0][:-4]
     json_path = args[1]
     write_json(json_path, audio_id, start_time, end_time)
-    print(type(start_time))
+    print(sample_rate, start_time, end_time)
     
 
 if __name__ == '__main__':
