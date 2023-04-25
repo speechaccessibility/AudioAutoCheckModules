@@ -114,7 +114,6 @@ def main(args):
     audio_id = args[0][:-4]
     json_path = args[1]
     write_json(json_path, audio_id, start_time, end_time)
-    print(sample_rate, start_time, end_time)
     
 
 if __name__ == '__main__':
